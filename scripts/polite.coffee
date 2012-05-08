@@ -25,7 +25,10 @@ module.exports = (robot) ->
     msg.reply msg.random shortResponses
 
   robot.respond /(<3)/i, (msg) ->
-    msg.reply "<3"
+    if msg.message.user.name.match(/^(justinxreese|xjstin)$/)
+      msg.reply ":-*"
+    else
+      msg.reply "<3"
 
   robot.respond /(hello|hi|sup|howdy|good (morning|evening|afternoon))/i, (msg) ->
     msg.reply "#{robot.name} at your service!"
