@@ -25,7 +25,7 @@ module.exports = (robot) ->
     msg.reply msg.random shortResponses
 
   robot.respond /(<3)/i, (msg) ->
-    if msg.message.user.name.match(/^(justinxreese|xjstin)$/)
+    if msg.message.user.name.match(/^(justinxreese|xjstin|mzalar)$/)
       msg.reply ":-*"
     else
       msg.reply "<3"
