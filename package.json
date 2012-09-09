@@ -18,12 +18,15 @@
     "hubot": "2.2.0",
     "hubot-irc": ">= 0.0.1",
     "hubot-scripts": ">=2.0.8",
-    "optparse": "1.0.3"
+    "optparse": "1.0.3",
+    "xpath": "0.0.5",
+    "xmldom": "0.1.12",
+    "date-utils": "1.2.11"
   },
 
   "engines": {
     "node": "0.6.x",
-    "npm": "1.0.x"
+    "npm": "1.1.x"
    }
 }
 
