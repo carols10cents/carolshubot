@@ -1,7 +1,7 @@
 # when is the next steelers game?
 #
 
-require('date-utils')
+tz = require('timezone/loaded')
 xpath = require('xpath')
 dom = require('xmldom').DOMParser
 
@@ -23,8 +23,8 @@ module.exports = (robot) ->
          team = opponent_id
 
          kickoff = xpath.select1("@kickoff", steelers_node).value
-         kdate = new Date(parseInt(kickoff) * 1000)
-         kdate_readable = kdate.toFormat('DDD, MMM D @ H:MI P')
+         kdate = tz(parseInt(kickoff) * 1000)
+         kdate_readable = tz(kdate, "%a %b %d @ %I:%M %P %Z", "en_US", "America/New_York")
 
          home_team = xpath.select1("team[@isHome='1']/@id", steelers_node).value
 

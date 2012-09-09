@@ -21,7 +21,7 @@
     "optparse": "1.0.3",
     "xpath": "0.0.5",
     "xmldom": "0.1.12",
-    "date-utils": "1.2.11"
+    "timezone": "0.0.15"
   },
 
   "engines": {
