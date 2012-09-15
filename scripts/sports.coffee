@@ -12,7 +12,7 @@ module.exports = (robot) ->
   robot.hear /(psu|penn state)/i, (msg) ->
     msg.reply "P-E-N-N-S-T SUCKS"
 
-  robot.hear /when is the next steelers game?/i, (msg) ->
+  robot.hear /(when is the next steelers game|when do the steelers play( next)?)\??/i, (msg) ->
     msg.http("http://football.myfantasyleague.com/2012/export")
        .query({"TYPE": "nflSchedule", "L": "", "W": ""})
        .get() (err, res, body) ->
