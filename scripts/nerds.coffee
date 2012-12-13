@@ -1,5 +1,5 @@
 module.exports = (robot) ->
-  robot.hear /(access main security grid)/i, (msg) ->
+  robot.hear /(access main program|access main security|access security|access security grid|access main program grid|access main security grid)/i, (msg) ->
     msg.reply "http://gifsoup.com/webroot/animatedgifs6/2662404_o.gif"
 
   robot.hear /(D&D|DND)/i, (msg) ->
