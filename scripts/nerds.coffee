@@ -5,5 +5,5 @@ module.exports = (robot) ->
   robot.hear /(D&D|DND)/i, (msg) ->
     msg.reply "http://madnerds.ytmnd.com/"
 
-  robot.hear /nerd/i (msg) ->
+  robot.hear /nerd/i, (msg) ->
     msg.reply "http://www.ourhonordefend.com/wp-content/uploads/nerds.jpg"
