@@ -7,3 +7,6 @@ module.exports = (robot) ->
 
   robot.hear /^nerds?$/i, (msg) ->
     msg.send "http://www.ourhonordefend.com/wp-content/uploads/nerds.jpg"
+
+  robot.hear /^incredible?$/i, (msg) ->
+    msg.send "http://i1339.photobucket.com/albums/o718/linkblaine/zack_meme_zps3553ac4a.jpg"
