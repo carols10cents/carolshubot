@@ -10,3 +10,6 @@ module.exports = (robot) ->
 
   robot.hear /^incredible?$/i, (msg) ->
     msg.send "http://i1339.photobucket.com/albums/o718/linkblaine/zack_meme_zps3553ac4a.jpg"
+
+  robot.hear /^\(noidea\)$/, (msg) ->
+    msg.send "http://cdn.memegenerator.net/instances/400x/35334325.jpg"
