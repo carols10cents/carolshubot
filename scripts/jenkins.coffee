@@ -20,7 +20,10 @@ module.exports = (robot) ->
     url = process.env.JENKINS_URL
     job = process.env.JENKINS_JOB
     token = process.env.JENKINS_TOKEN
-    msg.http("#{url}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[1]}")
-    .get() (err, res, body) ->
+    if url && job && token
+      msg.http("#{url}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[1]}")
+      .get() (err, res, body) ->
 
-    msg.send("jenkins is building '#{msg.match[1]}'")
+      msg.send("jenkins is building '#{msg.match[1]}'")
+    else
+      msg.send("jenkins environment variables not set. JENKINS_URL, JENKINS_TOKEN, and JENKINS_JOB")
