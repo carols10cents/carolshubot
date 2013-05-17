@@ -1,9 +1,6 @@
 # sports related taunts
 #
 
-xpath = require('xpath')
-dom = require('xmldom').DOMParser
-
 module.exports = (robot) ->
   robot.hear /(notre dame|fighting irish)/i, (msg) ->
     msg.reply "hey remember when notre dame got embarrassed 42-14 in the national championship? LOLOLOL"
