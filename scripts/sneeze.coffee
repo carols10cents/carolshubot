@@ -3,6 +3,6 @@ module.exports = (robot) ->
     msg.send "(lol) AAAAAAAAAAAAAAAAAAAAAAAAchooo"
     msg.send "(boom) AAAAAAAAAAAAAAAAAAAAAAAAchooo"
 
-  robot.hear /a*choo*/i, (msg) ->
+  robot.hear /a+choo+/i, (msg) ->
     msg.send "bless you!"
 
