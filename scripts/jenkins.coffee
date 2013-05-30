@@ -14,8 +14,8 @@
 #
 # Commands:
 #   hubot build <branch_name> - trigger a build of the branch
-#   hubot build failures - get a list of all currently failing builds in jenkins
-#   hubot build status - get the current build status for all jenkins jobs
+#   jenkins failures - get a list of all currently failing builds in jenkins
+#   jenkins status - get the current build status for all jenkins jobs
 #
 # Author:
 #   jkoenig311
@@ -34,10 +34,10 @@ module.exports = (robot) ->
     else
       msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
 
-  robot.respond /build failures/i, (msg) ->
+  robot.hear /^jenkins failures/i, (msg) ->
       get_faild_tests(msg)
 
-  robot.respond /build status/i, (msg) ->
+  robot.hear /jenkins status/i, (msg) ->
       get_status(msg)
 
   robot.hear /^(Apangea.*.[0-9])+ - #(\d+).+[FAILURE,Unstable]/i, (msg) ->
