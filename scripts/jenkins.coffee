@@ -47,13 +47,13 @@ get_build_status = (msg)->
     jenkins = jenkins_init()
     jenkins.build_info msg.match[1], msg.match[2], (err, build_info) ->
         if build_info.result != "SUCCESS"
-            msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures\ntry looking here for the cause http://#{process.env.JENKINS_SERVER}/#{build_info.actions[1].causes[0].upstreamUrl}#{build_info.actions[1].causes[0].upstreamBuild}"
+            msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures.  Parent job of failure: http://#{process.env.JENKINS_SERVER}/#{build_info.actions[1].causes[0].upstreamUrl}#{build_info.actions[1].causes[0].upstreamBuild}"
 
 get_faild_tests = (msg)->
     jenkins = jenkins_init()
     jenkins.all_jobs (err, data) ->
             for job in data
-                    jenkins.last_build_info job.name, (err, build_info) ->
+                    jenkins.last_completed_build_info job.name, (err, build_info) ->
                            if build_info.result != "SUCCESS"
                                    if build_info.actions[6] == undefined
                                       msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.url}"
@@ -64,7 +64,7 @@ get_status = (msg)->
     jenkins = jenkins_init()
     jenkins.all_jobs (err, data) ->
             for job in data
-                    jenkins.last_build_info job.name, (err, build_info) ->
+                    jenkins.last_completed_build_info job.name, (err, build_info) ->
                            msg.send "#{build_info.fullDisplayName}, #{build_info.result}"
 
 jenkins_init =  (msg)->
