@@ -68,7 +68,7 @@ module.exports = (robot) ->
         msg.send url
     else
       # Spock khan
-      memeGenerator msg, 2103662, 8814345, "", khanify(msg.match[1]), (url) ->
+      memeGenerator msg, 2103732, 8814557, "", khanify(msg.match[1]), (url) ->
         msg.send url
 
   robot.respond /(NOT SURE IF .*) (OR .*)/i, (msg) ->
