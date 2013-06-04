@@ -14,7 +14,7 @@
 #
 # Commands:
 #   hubot build <branch_name> - trigger a build of the branch
-#   jenkins failures - get a list of all currently failing builds in jenkins
+#   jenkins failures <filter> - get a list of all currently failing builds in jenkins
 #   jenkins status - get the current build status for all jenkins jobs
 #
 # Author:
@@ -34,7 +34,7 @@ module.exports = (robot) ->
     else
       msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
 
-  robot.hear /^jenkins failures/i, (msg) ->
+  robot.hear /^jenkins failures( \w+||())/i, (msg) ->
       get_faild_tests(msg)
 
   robot.hear /jenkins status/i, (msg) ->
@@ -51,15 +51,17 @@ get_build_status = (msg)->
 
 get_faild_tests = (msg)->
     jenkins = jenkins_init()
+    filter = msg.match[1].replace(" ","")
+    filter_regex = new RegExp(filter, "i")
     jenkins.all_jobs (err, data) ->
             for job in data
                     jenkins.last_completed_build_info job.name, (err, build_info) ->
                            if build_info.result != "SUCCESS"
                                    if build_info.actions[6] == undefined
-                                      msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.url}"
+                                      message ="#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.url}"
                                    else
-                                      msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures, #{build_info.url}"
-
+                                      message ="#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures, #{build_info.url}"
+                                   msg.send(message) unless !filter.undefined? and !build_info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 get_status = (msg)->
     jenkins = jenkins_init()
     jenkins.all_jobs (err, data) ->
