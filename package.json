@@ -25,7 +25,7 @@
 
   "dependencies": {
     "hubot":         ">= 2.5.1",
-    "hubot-scripts": ">= 2.4.2",
+    "hubot-scripts": ">= 2.4.6",
     "hubot-hipchat": "~2.5.1-1",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git"
   },
