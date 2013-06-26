@@ -37,7 +37,7 @@ module.exports = (robot) ->
   robot.hear /^jenkins failures( \w+||())/i, (msg) ->
       get_faild_tests(msg)
 
-  robot.hear /jenkins status/i, (msg) ->
+  robot.hear /^jenkins status( \w+||())/i, (msg) ->
       get_status(msg)
 
   robot.hear /^(Apangea.*.[0-9])+ - #(\d+).+[FAILURE,Unstable]/i, (msg) ->
@@ -69,12 +69,19 @@ get_faild_tests = (msg)->
                                    else
                                       message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
                                    msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
+
 get_status = (msg)->
     jenkins = jenkins_init()
+    filter = msg.match[1].replace(" ","")
+    filter_regex = new RegExp(filter, "i")
     jenkins.all_jobs (err, data) ->
             for job in data
                     jenkins.last_completed_build_info job.name, (err, info) ->
-                           msg.send "#{info.fullDisplayName}, #{info.result}"
+                                   if info.actions[6] == undefined || info.result == "SUCCESS"
+                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
+                                   else
+                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+                                   msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 jenkins_init =  (msg)->
     jenkinsapi = require('jenkins-api')
