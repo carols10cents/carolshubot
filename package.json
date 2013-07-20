@@ -24,9 +24,9 @@
   },
 
   "dependencies": {
-    "hubot":         ">= 2.5.1",
-    "hubot-scripts": ">= 2.4.6",
-    "hubot-hipchat": "~2.5.1-1",
+    "hubot":         ">= 2.6.1",
+    "hubot-scripts": ">= 2.5.1",
+    "hubot-hipchat": "~2.5.1-4",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git",
     "ntwitter": "https://github.com/sebhildebrandt/ntwitter/tarball/master",
     "htmlparser": "1.7.6",
@@ -34,7 +34,8 @@
     "jsdom": "0.2.14",
     "underscore": "1.3.3",
     "cheerio": "0.10.7",
-    "request": "2.14.0"
+    "request": "2.14.0",
+    "pg": "~0.10.2"
   },
 
   "engines": {
