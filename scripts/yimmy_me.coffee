@@ -18,7 +18,7 @@ module.exports = (robot) ->
     msg.http('https://graph.facebook.com/yimmys.deli')
        .query(
          fields: 'posts.limit(1)',
-         access_token: 'CAAHWloEIZBasBAN1NMwK0blxnMt2a6UXrhOrOOdgD7MFh2BETUmZBZAzoA7u6tSYZBtMXmPZBgA982s4dtBaDvuqdFVBBKZAFMeL2NU0szbpmFaBTM98kTrKMIjbjXP7sLQB5EzEkiscT1KyUHww85TJ5VhMzPlP0ZD' #process.env.FACEBOOK_ACCESS_TOKEN
+         access_token: process.env.FACEBOOK_ACCESS_TOKEN
        )
        .get() (err, res, body) ->
          return msg.send "Sorry, Facebook doesn't like you. ERROR: #{err}" if err
