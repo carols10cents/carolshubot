@@ -21,5 +21,10 @@ module.exports = (robot) ->
   robot.respond /((M|m)onster (N|n)ame)/i, (msg) ->
     monster_data = require('./text_adventure/monster_name.coffee') # monster name array
     monster = new monster_data.MonsterName
+
+    monster_desc_data = require('./text_adventure/monster_desc.coffee')
+    monster_desc = new monster_desc_data.MonsterDesc
+
     monster_name = new assembler.GenAssembler(monster.GetAVocab())
-    msg.send monster_name.Generate()
+    monster_desc_text = new assembler.GenAssembler(monster_desc.GetAVocab())
+    msg.send monster_name.Generate() + " - " + monster_desc_text.Generate()
