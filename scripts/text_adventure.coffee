@@ -1,5 +1,5 @@
 require('coffee-script')
-landscape = require('./text_adventure/landscape.coffee')
+assembler = require('./text_adventure/gen_assemble.coffee') # Cobbles Statements from structured arrays
 
 # Description:
 #   Location Plot Generator for Text Adventure Game
@@ -7,7 +7,19 @@ landscape = require('./text_adventure/landscape.coffee')
 # Commands:
 #   hubot Random location - Drums up a story line for your current location
 #   hubot Where am I - Drums up a story line for your current location
+#   hubot Look Around - Drums up a story line for your current location
+#
+#   hubot Monster Name - cobbles together a british sounding monster name
+
 module.exports = (robot) ->
-  robot.respond /(((R|r)andom|(R|r)(D|d)(M|m))( (L|l)ocation)|((W|w)here (A|a)m (I|i)))/i, (msg) ->
-    location = new landscape.Landscape
-    msg.send location.GenPlot()
+  robot.respond /(((R|r)andom|(R|r)(D|d)(M|m))( (L|l)ocation)|((W|w)here (A|a)m (I|i))|((L|l)ook (A|a)round))/i, (msg) ->
+    landscape_data = require('./text_adventure/landscape.coffee') # location array
+    landscape = new landscape_data.Landscape
+    location = new assembler.GenAssembler(landscape.GetAVocab())
+    msg.send location.Generate()
+
+  robot.respond /((M|m)onster (N|n)ame)/i, (msg) ->
+    monster_data = require('./text_adventure/monster_name.coffee') # monster name array
+    monster = new monster_data.MonsterName
+    monster_name = new assembler.GenAssembler(monster.GetAVocab())
+    msg.send monster_name.Generate()
