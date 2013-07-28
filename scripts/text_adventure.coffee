@@ -1,6 +1,5 @@
 require('coffee-script')
 landscape = require('./text_adventure/landscape.coffee')
-#this is talking to the JS file. I would love to figure out how to make it work with coffee
 
 # Description:
 #   Location Plot Generator for Text Adventure Game
