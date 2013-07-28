@@ -1,11 +1,14 @@
-landscape = require('./text_adventure/landscape')
+require('coffee-script')
+landscape = require('./text_adventure/landscape.coffee')
+#this is talking to the JS file. I would love to figure out how to make it work with coffee
 
 # Description:
-#   Messing around with the YouTube API.
+#   Location Plot Generator for Text Adventure Game
 #
 # Commands:
-#   hubot youtube me <query> - Searches YouTube for the query and returns the video embed link.
+#   hubot Random location - Drums up a story line for your current location
+#   hubot Where am I - Drums up a story line for your current location
 module.exports = (robot) ->
-  robot.respond /((R|r)andom|(R|r)(D|d)(M|m))( (L|l)ocation)/i, (msg) ->
-    landscape = new Landscape
-    msg.send landscape.GenPlot
+  robot.respond /(((R|r)andom|(R|r)(D|d)(M|m))( (L|l)ocation)|((W|w)here (A|a)m (I|i)))/i, (msg) ->
+    location = new landscape.Landscape
+    msg.send location.GenPlot()

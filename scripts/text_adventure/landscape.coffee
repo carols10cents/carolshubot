@@ -1,11 +1,31 @@
-Landscape = ->
+#adapted from http://springhole.net/writing_roleplaying_randomators/landscape.htm
+
+#coffee-ized and Classed by Paul Scarrone 7-28-2013
+
+#The data stored is pretty simple.  It works like this:
+#
+# The aVocab array has sub arrays that are named lists of data.
+#
+#aVocab[intCat]= new Array(); - The aVocab Array actually holds other arrays.
+#aVocab[intCat][0]="FIRST" - This is the name of the list of data in this sub array.  The name helps the program find the data.
+#aVocab[intCat][1] = new Array() - Yep, ANOTHER array - this is the array that holds the actual data.
+#aVocab[intCat][1][intIncr++]="First thing <SECOND>" // See that <SECOND> tag?  Anything in brackets references another list.
+#aVocab[intCat][1][intIncr++]="First thing <THIRD>"
+#
+# Unless it's the last entry, don't forget to increment and reset the counters!
+#
+#intCat++
+#intIncr=0
+
+exports.Landscape = ->
+  aVocab = undefined
   intCat = 0
   intIncr = 0
   aVocab = []
   aVocab[intCat] = []
   aVocab[intCat][0] = "FIRST"
   aVocab[intCat][1] = []
-  aVocab[intCat][1][intIncr++] = "You stand in a <TerrainDesc> <Area> <Objects>.  <Features>."
+  aVocab[intCat][1][intIncr++] = "You stand in a <TerrainDesc> <Area> <Objects>. <Features>."
   intCat++
   intIncr = 0
   aVocab[intCat] = []
@@ -188,6 +208,7 @@ Landscape = ->
   aVocab[intCat] = []
   aVocab[intCat][0] = "THIRD"
   aVocab[intCat][1] = []
+
   @GenNumber = (nRange) ->
     Math.round Math.random() * nRange
 
@@ -222,3 +243,5 @@ Landscape = ->
 
   @GetAVocab = ->
     aVocab
+
+  undefined
