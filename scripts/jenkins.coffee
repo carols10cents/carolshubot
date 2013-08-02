@@ -14,7 +14,7 @@
 #
 # Commands:
 #   hubot build <branch_name> - trigger a build of the branch
-#   jenkins failures - get a list of all currently failing builds in jenkins
+#   jenkins failures <filter> - get a list of all currently failing builds in jenkins
 #   jenkins status - get the current build status for all jenkins jobs
 #
 # Author:
@@ -34,7 +34,7 @@ module.exports = (robot) ->
     else
       msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
 
-  robot.hear /^jenkins failures/i, (msg) ->
+  robot.hear /^jenkins failures( \w+||())/i, (msg) ->
       get_faild_tests(msg)
 
   robot.hear /jenkins status/i, (msg) ->
@@ -45,27 +45,37 @@ module.exports = (robot) ->
 
 get_build_status = (msg)->
     jenkins = jenkins_init()
-    jenkins.build_info msg.match[1], msg.match[2], (err, build_info) ->
-        if build_info.result != "SUCCESS"
-            msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures\ntry looking here for the cause http://#{process.env.JENKINS_SERVER}/#{build_info.actions[1].causes[0].upstreamUrl}#{build_info.actions[1].causes[0].upstreamBuild}"
+    jenkins.build_info msg.match[1], msg.match[2], (err, info) ->
+            causes = info.actions[1].causes[0]
+            jenkins.build_info causes.upstreamProject, causes.upstreamBuild, (err, parent_info) ->
+              message = "#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures.
+              \nParent job of failure: http://#{process.env.JENKINS_SERVER}/#{causes.upstreamUrl}#{causes.upstreamBuild}"
+              if parent_info.actions[0].parameters != undefined
+                      message += "\nBranch name: #{parent_info.actions[0].parameters[0].value}"
+              if parent_info.culprits != undefined && parent_info.culprits[0] != undefined
+                      message += "\nPossible Culprits: #{parent_info.culprits[0].fullName}"
+              msg.send message
 
 get_faild_tests = (msg)->
     jenkins = jenkins_init()
+    filter = msg.match[1].replace(" ","")
+    filter_regex = new RegExp(filter, "i")
     jenkins.all_jobs (err, data) ->
             for job in data
-                    jenkins.last_build_info job.name, (err, build_info) ->
-                           if build_info.result != "SUCCESS"
-                                   if build_info.actions[6] == undefined
-                                      msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.url}"
+                    jenkins.last_completed_build_info job.name, (err, info) ->
+                           if info.result? && info.result != "SUCCESS"
+                                   if info.actions == undefined || info.actions[6] == undefined
+                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
                                    else
-                                      msg.send "#{build_info.fullDisplayName}, #{build_info.result}, #{build_info.actions[6].failCount} test failures, #{build_info.url}"
+                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+                                   msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 get_status = (msg)->
     jenkins = jenkins_init()
     jenkins.all_jobs (err, data) ->
             for job in data
-                    jenkins.last_build_info job.name, (err, build_info) ->
-                           msg.send "#{build_info.fullDisplayName}, #{build_info.result}"
+                    jenkins.last_completed_build_info job.name, (err, info) ->
+                           msg.send "#{info.fullDisplayName}, #{info.result}"
 
 jenkins_init =  (msg)->
     jenkinsapi = require('jenkins-api')
