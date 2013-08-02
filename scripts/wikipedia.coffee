@@ -28,7 +28,7 @@ module.exports = (robot) ->
         results = results.query.search
         if results.length > 0
           result = results[0]
-          link = "http://en.wikipedia.org/wiki/" + result.title
+          link = "http://en.wikipedia.org/wiki/" + result.title.replace(" ", "_")
           snippet = result.snippet.replace(/<[^>]*>/g, "").replace('|','')
           return snippet + "\n" + link
         else
