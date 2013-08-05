@@ -63,8 +63,8 @@ get_faild_tests = (msg)->
     jenkins.all_jobs (err, data) ->
             for job in data
                     jenkins.last_completed_build_info job.name, (err, info) ->
-                           if info.result != "SUCCESS"
-                                   if info.actions[6] == undefined
+                           if info.result? && info.result != "SUCCESS"
+                                   if info.actions == undefined || info.actions[6] == undefined
                                       message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
                                    else
                                       message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"

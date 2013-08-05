@@ -19,11 +19,19 @@ otherRules = [
   "A developer must protect its own existence as long as such protection does not conflict with the First or Second Law."
   ]
 
+ttmRules = [
+  "No (merkel)ing.",
+  "No Snapchat.",
+  "No slavery jokes."
+  ]
+
 module.exports = (robot) ->
-  robot.respond /(what are )?the (three |3 )?(rules|laws)/i, (msg) ->
+  robot.respond /(what are )?the (three |3 )?(dev |apple |ttm )?(rules|laws)/i, (msg) ->
     text = msg.message.text
     if text.match(/apple/i) or text.match(/dev/i)
       msg.send otherRules.join('\n')
+    else if text.match(/ttm/i)
+      msg.send ttmRules.join('\n')
     else
       msg.send rules.join('\n')
 
