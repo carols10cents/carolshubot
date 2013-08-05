@@ -77,11 +77,12 @@ get_status = (msg)->
     jenkins.all_jobs (err, data) ->
             for job in data
                     jenkins.last_completed_build_info job.name, (err, info) ->
-                                   if info.actions[6] == undefined || info.result == "SUCCESS"
-                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
-                                   else
-                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
-                                   msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
+                                   if info.fullDisplayName != undefined
+                                       if info.actions == undefined || info.actions[6] == undefined || info.result == "SUCCESS"
+                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
+                                       else
+                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+                                       msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 jenkins_init =  (msg)->
     jenkinsapi = require('jenkins-api')
