@@ -13,9 +13,9 @@
 #   None
 #
 # Commands:
-#   hubot build <branch_name> - trigger a build of the branch
-#   jenkins failures <filter> - get a list of all currently failing builds in jenkins
-#   jenkins status - get the current build status for all jenkins jobs
+#   hubot build <branch_name> - trigger a build of the branch on jenkins
+#   jenkins failures (optional)<filter> - get a list of all (or filtered) currently failing builds in jenkins
+#   jenkins status (optional)<filter> - get the current build status for all (or filtered) jenkins jobs
 #
 # Author:
 #   jkoenig311
