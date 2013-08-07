@@ -16,3 +16,6 @@ module.exports = (robot) ->
 
   robot.hear /(cleveland|browns)/i, (msg) ->
     msg.reply "Cleveland still sucks"
+
+  robot.hear /duke/i, (msg) ->
+    msg.reply "PITT BEAT DUKE"
