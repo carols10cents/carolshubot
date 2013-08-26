@@ -34,7 +34,7 @@ module.exports = (robot) ->
     msg.reply "#{robot.name} at your service!"
 
   robot.hear /sorry/i, (msg) ->
-    msg.reply "http://24.media.tumblr.com/87f8e1d7fb4a217d0cfe5222d66493ea/tumblr_mfgw9aQeNY1s1os2to1_400.jpg"
+    msg.send "http://24.media.tumblr.com/87f8e1d7fb4a217d0cfe5222d66493ea/tumblr_mfgw9aQeNY1s1os2to1_400.jpg"
 
   robot.hear /holy/i, (msg) ->
-    msg.reply "https://s3.amazonaws.com/uploads.hipchat.com/44708/298888/3ascupxtalzpums/upload.png"
+    msg.send "https://s3.amazonaws.com/uploads.hipchat.com/44708/298888/3ascupxtalzpums/upload.png"
