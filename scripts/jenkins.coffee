@@ -13,7 +13,7 @@
 #   None
 #
 # Commands:
-#   hubot build <branch_name> - trigger a build of the branch on jenkins
+#   hubot (build|test) <branch_name> - trigger a build of the branch on jenkins
 #   jenkins failures (optional)<filter> - get a list of all (or filtered) currently failing builds in jenkins
 #   jenkins status (optional)<filter> - get the current build status for all (or filtered) jenkins jobs
 #
@@ -22,15 +22,15 @@
 
 
 module.exports = (robot) ->
-  robot.respond /build ?(.*)?$/i, (msg) ->
+  robot.respond /(build|test) ?(.*)?$/i, (msg) ->
     server = process.env.JENKINS_SERVER
     job = process.env.JENKINS_JOB
     token = process.env.JENKINS_TOKEN
     if server && job && token
-      msg.http("http://#{server}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[1]}")
+      msg.http("http://#{server}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[2]}")
       .get() (err, res, body) ->
 
-      msg.send("jenkins is building '#{msg.match[1]}'")
+      msg.send("jenkins is building '#{msg.match[2]}'")
     else
       msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
 
