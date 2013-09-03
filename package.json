@@ -26,7 +26,7 @@
   "dependencies": {
     "hubot":         ">= 2.5.1",
     "hubot-scripts": ">= 2.5.1",
-    "hubot-hipchat": "~2.5.1-4",
+    "hubot-hipchat": "git@github.com:carols10cents/hubot-hipchat.git",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git",
     "ntwitter": "https://github.com/sebhildebrandt/ntwitter/tarball/master",
     "htmlparser": "1.7.6",
