@@ -33,7 +33,7 @@ module.exports = (robot) ->
   robot.respond /(hello|hi|sup|howdy|good (morning|evening|afternoon))/i, (msg) ->
     msg.reply "#{robot.name} at your service!"
 
-  robot.hear /sorry/i, (msg) ->
+  robot.hear /^sorry$/i, (msg) ->
     msg.send "http://24.media.tumblr.com/87f8e1d7fb4a217d0cfe5222d66493ea/tumblr_mfgw9aQeNY1s1os2to1_400.jpg"
 
   robot.hear /holy/i, (msg) ->
