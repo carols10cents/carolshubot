@@ -10,3 +10,9 @@ module.exports = (robot) ->
 
   robot.hear /(psu|penn state)/i, (msg) ->
     msg.reply "P-E-N-N-S-T SUCKS"
+
+  robot.hear /(philly|philadelphia|flyers|eagles)/i, (msg) ->
+    msg.reply "I believe you mean 'filthydelphia'"
+
+  robot.hear /(cleveland|browns)/i, (msg) ->
+    msg.reply "Cleveland still sucks"
