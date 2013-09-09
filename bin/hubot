@@ -1,5 +1,5 @@
 #!/bin/sh
-export DATABASE_URL=`heroku config:get DATABASE_URL -a mathbot`
+
 npm install
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
