@@ -21,7 +21,7 @@ module.exports = (robot) ->
   robot.respond /(thanks|thank you|cheers|nice one)/i, (msg) ->
     msg.reply msg.random responses
 
-  robot.respond /(ty|thx)/i, (msg) ->
+  robot.respond /\b(ty|thx)\b/i, (msg) ->
     msg.reply msg.random shortResponses
 
   robot.respond /(<3)/i, (msg) ->
@@ -30,7 +30,7 @@ module.exports = (robot) ->
     else
       msg.reply "<3"
 
-  robot.respond /(hello|hi|sup|howdy|good (morning|evening|afternoon))/i, (msg) ->
+  robot.respond /\b(hello|hi|sup|howdy|good (morning|evening|afternoon))\b/i, (msg) ->
     msg.reply "#{robot.name} at your service!"
 
   robot.hear /^sorry$/i, (msg) ->
