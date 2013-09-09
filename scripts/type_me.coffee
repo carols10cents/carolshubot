@@ -4,8 +4,8 @@
 # Commands:
 #   hubot type me <string> - goes character by character typeing text
 module.exports = (robot) ->
-  robot.respond /((T|t)ype (M|m)e (.*))/i, (msg) ->
-    message = msg.match[4]
+  robot.respond /type me (.*)/i, (msg) ->
+    message = msg.match[1]
     length = message.length
     index = 1
     msg.send message.slice(0, index)
