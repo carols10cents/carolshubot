@@ -5,6 +5,6 @@
 #   hubot Carol me <text> - Makes.the.statement.very.stacatto.by.adding.periods.between.all.words
 
 module.exports = (robot) ->
-  robot.respond /((C|c)arol (M|m)e (.*))/i, (msg) ->
-    message = msg.match[4]
+  robot.respond /carol me (.*)/i, (msg) ->
+    message = msg.match[1]
     msg.send message.replace(RegExp(" ", "g"), ".")
