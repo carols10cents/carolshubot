@@ -25,26 +25,37 @@ module.exports = (robot) ->
     msg.reply "PITT BEAT DUKE"
 
   robot.hear /(when is the next steelers game|when do the steelers play( next)?)\??/i, (msg) ->
-    msg.http("http://football.myfantasyleague.com/2013/export")
-       .query({"TYPE": "nflSchedule", "L": "", "W": ""})
-       .get() (err, res, body) ->
-         doc = new dom().parseFromString(body)
-         steelers_node = xpath.select1("//matchup[team[@id='PIT']]", doc)
+    nflLookup msg, ''
 
-         opponent_id = xpath.select1("team[not(@id='PIT')]/@id", steelers_node).value
-         team = opponent_id
+nflLookup = (msg, week_number_requested) ->
+  msg.http("http://football.myfantasyleague.com/2013/export")
+    .query({"TYPE": "nflSchedule", "L": "", "W": week_number_requested})
+    .get() (err, res, body) ->
+      nflParser msg, body, week_number_requested
 
-         kickoff = xpath.select1("@kickoff", steelers_node).value
-         kdate = tz(parseInt(kickoff) * 1000)
-         kdate_readable = tz(kdate, "%a %b %d @ %I:%M %P %Z", "en_US", "America/New_York")
+nflParser = (msg, body, week_number_requested) ->
+  doc = new dom().parseFromString(body)
+  week_number_received = parseInt(xpath.select1("/nflSchedule/@week", doc).value)
+  game_seconds_remaining = xpath.select1("@gameSecondsRemaining", steelers_node).value
 
-         home_team = xpath.select1("team[@isHome='1']/@id", steelers_node).value
+  if game_seconds_remaining == "0" && week_number_requested == ''
+    nflLookup msg, week_number_received + 1
+  else
+    steelers_node = xpath.select1("//matchup[team[@id='PIT']]", doc)
+    opponent_id = xpath.select1("team[not(@id='PIT')]/@id", steelers_node).value
+    team = opponent_id
 
-         if home_team == "PIT"
-           home_or_away = "at home against #{team}"
-         else
-           home_or_away = "at #{team}"
+    kickoff = xpath.select1("@kickoff", steelers_node).value
+    kdate = tz(parseInt(kickoff) * 1000)
+    kdate_readable = tz(kdate, "%a %b %d @ %I:%M %P %Z", "en_US", "America/New_York")
 
-         answer = "The Steelers next play on #{kdate_readable} #{home_or_away}."
+    home_team = xpath.select1("team[@isHome='1']/@id", steelers_node).value
 
-         msg.send(answer)
+    if home_team == "PIT"
+      home_or_away = "at home against #{team}"
+    else
+      home_or_away = "at #{team}"
+
+    answer = "The Steelers next play on #{kdate_readable} #{home_or_away}."
+
+    msg.send(answer)
