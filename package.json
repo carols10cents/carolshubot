@@ -36,7 +36,8 @@
     "coffee-script": "~1.6.3",
     "cheerio": "0.10.7",
     "request": "2.14.0",
-    "pg": "~0.10.2"
+    "pg": "~0.10.2",
+    "timezone": "0.0.23"
   },
 
   "engines": {
