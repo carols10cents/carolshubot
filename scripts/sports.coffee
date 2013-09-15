@@ -36,12 +36,13 @@ nflLookup = (msg, week_number_requested) ->
 nflParser = (msg, body, week_number_requested) ->
   doc = new dom().parseFromString(body)
   week_number_received = parseInt(xpath.select1("/nflSchedule/@week", doc).value)
+
+  steelers_node = xpath.select1("//matchup[team[@id='PIT']]", doc)
   game_seconds_remaining = xpath.select1("@gameSecondsRemaining", steelers_node).value
 
   if game_seconds_remaining == "0" && week_number_requested == ''
     nflLookup msg, week_number_received + 1
   else
-    steelers_node = xpath.select1("//matchup[team[@id='PIT']]", doc)
     opponent_id = xpath.select1("team[not(@id='PIT')]/@id", steelers_node).value
     team = opponent_id
 
