@@ -13,3 +13,6 @@ module.exports = (robot) ->
 
   robot.hear /^\(noidea\)$/, (msg) ->
     msg.send "http://cdn.memegenerator.net/instances/400x/35334325.jpg"
+
+  robot.hear /cheese/, (msg) ->
+    msg.send "CHEEEEESE http://stream1.gifsoup.com/view5/2774200/cheese-gromit-o.gif"
