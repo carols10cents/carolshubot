@@ -17,6 +17,16 @@ shortResponses = [
   'np',
 ]
 
+applesauce = [
+  'http://www.simplyrecipes.com/wp-content/uploads/2008/10/applesauce-2.jpg',
+  'http://www.zehnders.com/zblog/wp-content/uploads/2011/08/applesauce.jpg',
+  'http://i.walmartimages.com/i/p/00/01/48/00/00/0001480000007_500X500.jpg',
+  'http://www.tropicaltraditions.com/images/organic_applesauce.jpg',
+  'http://images.iherb.com/l/OGB-00400-0.jpg',
+  'http://thishappymom.com/wp-content/uploads/2012/09/applesauce.jpg',
+  'http://media.treehugger.com/assets/images/2011/10/picture-red-green-diy-applesauce.jpg'
+]
+
 module.exports = (robot) ->
   robot.respond /(thanks|thank you|cheers|nice one)/i, (msg) ->
     msg.reply msg.random responses
@@ -38,3 +48,7 @@ module.exports = (robot) ->
 
   robot.hear /holy/i, (msg) ->
     msg.send "https://s3.amazonaws.com/uploads.hipchat.com/44708/298888/3ascupxtalzpums/upload.png"
+
+  robot.hear /^applesauce$/i, (msg) ->
+    msg.reply msg.random applesauce
+
