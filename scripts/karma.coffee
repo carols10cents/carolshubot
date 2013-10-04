@@ -73,6 +73,14 @@ class Karma
     sorted = @sort()
     sorted.slice(-n).reverse()
 
+  nonzero: ->
+    sorted = @sort()
+    nz = []
+    for thing in sorted
+      if thing.karma != 0
+        nz.push(thing)
+    nz
+
 module.exports = (robot) ->
   karma = new Karma robot
   robot.hear /^([^+:\s]*)[: ]*\+\+$/, (msg) ->
@@ -102,7 +110,13 @@ module.exports = (robot) ->
       verbiage.push "#{rank + 1}. #{item.name} - #{item.karma}"
     msg.send verbiage.join("\n")
 
+  robot.respond /karma all$/i, (msg) ->
+    verbiage = ["All Karma"]
+    for item, rank in karma.nonzero()
+      verbiage.push "#{rank + 1}. #{item.name} - #{item.karma}"
+    msg.send verbiage.join("\n")
+
   robot.respond /karma (\S+[^-\s])$/i, (msg) ->
     match = msg.match[1].toLowerCase()
-    if match != "best" && match != "worst"
+    if match != "best" && match != "worst" && match != "all"
       msg.send "\"#{match}\" has #{karma.get(match)} karma."
