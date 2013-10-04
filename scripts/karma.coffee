@@ -75,12 +75,12 @@ class Karma
 
 module.exports = (robot) ->
   karma = new Karma robot
-  robot.hear /(\S+[^+:\s])[: ]*\+\+(\s|$)/, (msg) ->
+  robot.hear /^([^+:\s]*)[: ]*\+\+$/, (msg) ->
     subject = msg.match[1].toLowerCase()
     karma.increment subject
     msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
 
-  robot.hear /(\S+[^-:\s])[: ]*--(\s|$)/, (msg) ->
+  robot.hear /^([^-:\s]*)[: ]*--$/, (msg) ->
     subject = msg.match[1].toLowerCase()
     karma.decrement subject
     msg.send "#{subject} #{karma.decrementResponse()} (Karma: #{karma.get(subject)})"
