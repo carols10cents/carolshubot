@@ -46,9 +46,11 @@ module.exports = (robot) ->
   robot.hear /^sorry$/i, (msg) ->
     msg.send "http://24.media.tumblr.com/87f8e1d7fb4a217d0cfe5222d66493ea/tumblr_mfgw9aQeNY1s1os2to1_400.jpg"
 
-  robot.hear /holy/i, (msg) ->
+  robot.hear /\bholy\b/i, (msg) ->
     msg.send "https://s3.amazonaws.com/uploads.hipchat.com/44708/298888/3ascupxtalzpums/upload.png"
 
   robot.hear /^applesauce$/i, (msg) ->
     msg.reply msg.random applesauce
 
+  robot.hear /\bbulletproof\b/, (msg) ->
+    msg.send "http://24.media.tumblr.com/tumblr_lk3b2lx3Tb1qci3mxo1_500.gif"

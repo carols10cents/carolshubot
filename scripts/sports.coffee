@@ -25,23 +25,30 @@ module.exports = (robot) ->
     msg.reply "PITT BEAT DUKE"
 
   robot.hear /(when is the next steelers game|when do the steelers play( next)?)\??/i, (msg) ->
-    nflLookup msg, ''
+    nflLookup robot, msg, ''
 
-nflLookup = (msg, week_number_requested) ->
-  msg.http("http://football.myfantasyleague.com/2013/export")
+nflLookup = (robot, msg, week_number_requested) ->
+  robot.http("http://football.myfantasyleague.com/2013/export")
     .query({"TYPE": "nflSchedule", "L": "", "W": week_number_requested})
     .get() (err, res, body) ->
-      nflParser msg, body, week_number_requested
+      nflParser robot, msg, body, week_number_requested
 
-nflParser = (msg, body, week_number_requested) ->
+nflParser = (robot, msg, body, week_number_requested) ->
   doc = new dom().parseFromString(body)
   week_number_received = parseInt(xpath.select1("/nflSchedule/@week", doc).value)
 
   steelers_node = xpath.select1("//matchup[team[@id='PIT']]", doc)
+
+  if steelers_node
+    nflInterpret robot, msg, body, xpath, steelers_node, week_number_requested
+  else
+    msg.send "The Steelers have a bye this week."
+
+nflInterpret = (robot, msg, body, xpath, steelers_node, week_number_requested) ->
   game_seconds_remaining = xpath.select1("@gameSecondsRemaining", steelers_node).value
 
   if game_seconds_remaining == "0" && week_number_requested == ''
-    nflLookup msg, week_number_received + 1
+    nflLookup robot, msg, week_number_received + 1
   else
     opponent_id = xpath.select1("team[not(@id='PIT')]/@id", steelers_node).value
     team = opponent_id
