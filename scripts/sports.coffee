@@ -43,6 +43,7 @@ nflParser = (robot, msg, body, week_number_requested) ->
     nflInterpret robot, msg, body, xpath, steelers_node, week_number_requested
   else
     msg.send "The Steelers have a bye this week."
+    nflLookup robot, msg, week_number_received + 1
 
 nflInterpret = (robot, msg, body, xpath, steelers_node, week_number_requested) ->
   game_seconds_remaining = xpath.select1("@gameSecondsRemaining", steelers_node).value
