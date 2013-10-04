@@ -14,6 +14,7 @@
 #   hubot karma empty <thing> - empty a thing's karma
 #   hubot karma best - show the top 5
 #   hubot karma worst - show the bottom 5
+#   hubot karma all - show everything that has positive or negative karma
 #
 # Author:
 #   stuartf
