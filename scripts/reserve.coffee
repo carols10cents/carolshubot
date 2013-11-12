@@ -1,5 +1,5 @@
 # Description:
-#   Stagehand manages who is currently using your team's staging server
+#   Reserve manages who is currently using shared resources
 #
 # Dependencies:
 #   None
@@ -8,44 +8,106 @@
 #   None
 #
 # Commands:
-#   stagehand who - Show who has booked the staging server and how much time they have left
-#   stagehand book [minutes] - Book the staging server and optionally specify usage time. Default is 30min
-#   stagehand cancel - Cancel the current booking
-#
+#   reservations - Show who has all the resources
+#   who has the [resource name] - Show the current holder of a particular resource
+#   is the [resource name] available - Yes if it's available, show who has it reserved if not
+#   reserve the [resource name] - Reserve something
+#   return the [resource name] - Return something you have checked out
+#   force return the [resource name] - Return something anyone has checked out
+#   stop taking reservations for the [resource name] - Clear out this resource so that it doesn't show up in the list
+
 # Author:
-#   tinifni
+#   carols10cents
 
-bookStaging = (data, user, minutes) ->
-  return false if data.user != user && new Date() < data.expires
-  unless data.user == user && new Date() < data.expires
-    data.user = user
-    data.expires = new Date()
-  data.expires = new Date(data.expires.getTime() + minutes * 1000 * 60)
 
-status = (data) ->
-  return 'Staging is free for use.' unless new Date() < data.expires
-  data.user + ' has staging booked for the next ' \
-            + Math.ceil((data.expires - new Date())/(60*1000)) \
-            + ' minutes.'
+class Reserver
 
-cancelBooking = (data) ->
-  data.expires = new Date(0)
+  constructor: (@robot) ->
+    @reservations = {}
+
+    @robot.brain.on 'loaded', =>
+      if @robot.brain.data.reservations
+        @reservations = @robot.brain.data.reservations
+
+  save: ->
+    @robot.brain.data.reservations = @reservations
+
+  allReservations: ->
+    @reservations
+
+  findReservation: (resource) ->
+    @reservations[resource]
+
+  reserve: (resource, user) ->
+    @reservations[resource] = user
+    @save()
+
+  cancel: (resource) ->
+    @reserve(resource, "(available)")
+
+  clear: (resource) ->
+    delete @reservations[resource]
+    @save()
+
+  clearAll: ->
+    @robot.brain.data.reservations = {}
+    @save()
+
 
 module.exports = (robot) ->
-  robot.brain.on 'loaded', =>
-    robot.brain.data.stagehand ||= { user: "initial", expires: new Date(0) }
+  reserver = new Reserver robot
 
-  robot.respond /stagehand book( \d+)*/i, (msg) ->
-    if msg.match[1] == undefined
-      minutes = 30
+  robot.respond /reservations/i, (msg) ->
+    for resource, user of reserver.allReservations()
+      msg.send "#{resource}: #{user}"
+
+  robot.respond /who has (the )?(.*)/i, (msg) ->
+    resource = msg.match[2].toLowerCase()
+    existingReservation = reserver.findReservation(resource)
+    if !existingReservation || existingReservation == "(available)"
+      msg.reply "No one does."
     else
-      minutes = Number(msg.match[1])
-    bookStaging(robot.brain.data.stagehand, msg.message.user.name, minutes)
-    msg.send status(robot.brain.data.stagehand)
+      msg.reply "#{existingReservation}"
 
-  robot.respond /stagehand who/i, (msg) ->
-    msg.send status(robot.brain.data.stagehand)
+  robot.respond /is (the )?(.*) available\?/i, (msg) ->
+    resource = msg.match[2].toLowerCase()
+    existingReservation = reserver.findReservation(resource)
+    if !existingReservation || existingReservation == "(available)"
+      msg.reply "Yes, it is."
+    else
+      msg.reply "Nope, #{existingReservation} has it."
 
-  robot.respond /stagehand cancel/i, (msg) ->
-    cancelBooking(robot.brain.data.stagehand)
-    msg.send status(robot.brain.data.stagehand)
+  robot.respond /reserve (the )?(.*)/i, (msg) ->
+    resource = msg.match[2]
+    user     = msg.message.user.name
+
+    existingReservation = reserver.findReservation(resource)
+
+    if !existingReservation || existingReservation == "(available)"
+      reserver.reserve(resource, user)
+      msg.reply "It's all yours."
+    else
+      msg.reply "Sorry, that's currently reserved by #{existingReservation}. Please have them return it."
+
+  robot.respond /(force )?return (the )?(.*)/i, (msg) ->
+    resource = msg.match[3].toLowerCase()
+    user     = msg.message.user.name
+    existingReservation = reserver.findReservation(resource)
+    force    = msg.match[1]
+
+    if existingReservation
+      if existingReservation == user || force
+        reserver.cancel(resource)
+        msg.send "Now available: #{resource}!"
+      else if existingReservation == "(available)"
+        msg.send "You didn't have that reserved... no one did... sooo... it's available still!"
+      else
+        msg.reply "You can't; #{existingReservation} has it! Have them return it."
+    else
+      reserver.cancel(resource)
+      msg.send "I don't know anything about that, sooo... it's available now!"
+
+  robot.respond /stop taking reservations for (the )?(.*)/i, (msg) ->
+    resource = msg.match[2]
+    reserver.clear(resource)
+    msg.send "Ok, no longer reservable: #{resource}"
