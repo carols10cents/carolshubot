@@ -43,7 +43,7 @@ celebrate = (name) ->
   celebrates[(Math.random() * celebrates.length) >> 0].replace(/{name}/, name);
 
 celebrates = [
-  "{name} - Celebrate all the things!  
+  "{name} - Celebrate all the things!",
   "{name} - Hoping that your day will be as special as you are.",
   "{name} - Count your life by smiles, not tears. Count your age by friends, not years.",
   "May the years continue to be good to you. Happy Birthday {name}!",
