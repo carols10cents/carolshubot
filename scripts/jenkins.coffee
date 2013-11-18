@@ -13,31 +13,31 @@
 #   None
 #
 # Commands:
-#   hubot build <branch_name> - trigger a build of the branch
-#   jenkins failures <filter> - get a list of all currently failing builds in jenkins
-#   jenkins status - get the current build status for all jenkins jobs
+#   hubot (build|test) <branch_name> - trigger a build of the branch on jenkins
+#   jenkins failures (optional)<filter> - get a list of all (or filtered) currently failing builds in jenkins
+#   jenkins status (optional)<filter> - get the current build status for all (or filtered) jenkins jobs
 #
 # Author:
 #   jkoenig311
 
 
 module.exports = (robot) ->
-  robot.respond /build ?(.*)?$/i, (msg) ->
+  robot.respond /(build|test) ?(.*)?$/i, (msg) ->
     server = process.env.JENKINS_SERVER
     job = process.env.JENKINS_JOB
     token = process.env.JENKINS_TOKEN
     if server && job && token
-      msg.http("http://#{server}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[1]}")
+      msg.http("http://#{server}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[2]}")
       .get() (err, res, body) ->
 
-      msg.send("jenkins is building '#{msg.match[1]}'")
+      msg.send("jenkins is building '#{msg.match[2]}'")
     else
       msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
 
   robot.hear /^jenkins failures( \w+||())/i, (msg) ->
       get_faild_tests(msg)
 
-  robot.hear /jenkins status/i, (msg) ->
+  robot.hear /^jenkins status( \w+||())/i, (msg) ->
       get_status(msg)
 
   robot.hear /^(Apangea.*.[0-9])+ - #(\d+).+[FAILURE,Unstable]/i, (msg) ->
@@ -72,10 +72,17 @@ get_faild_tests = (msg)->
 
 get_status = (msg)->
     jenkins = jenkins_init()
+    filter = msg.match[1].replace(" ","")
+    filter_regex = new RegExp(filter, "i")
     jenkins.all_jobs (err, data) ->
             for job in data
                     jenkins.last_completed_build_info job.name, (err, info) ->
-                           msg.send "#{info.fullDisplayName}, #{info.result}"
+                                   if info.fullDisplayName != undefined
+                                       if info.actions == undefined || info.actions[6] == undefined || info.result == "SUCCESS"
+                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
+                                       else
+                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+                                       msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 jenkins_init =  (msg)->
     jenkinsapi = require('jenkins-api')
