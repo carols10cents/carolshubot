@@ -1,1 +1,1 @@
-web: bin/hubot -a irc -n carolshubot
+web: bin/hubot -a hipchat -n "math bot"
