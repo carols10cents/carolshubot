@@ -9,7 +9,7 @@
 #
 # Commands:
 #   mathbot birthday quote for <user> -- congratulate <user> with a random birthday quote
-#   mathbot celebrate me <user> -- congratulate <user> with an inspirational greeting 
+#   mathbot celebrate me <user> -- congratulate <user> with an inspirational greeting
 #   mathbot happy birthday me <user> -- congratulate <user> with a humorous greeting
 #
 # Author:
@@ -31,7 +31,7 @@ module.exports = (robot) ->
       msg.send(quote())
     else
       msg.send(greeting(name))
-  
+
   robot.respond /(celebrate)( me )?(.*)/i, (msg)->
     name = msg.match[3].trim()
     if name.length == 0
@@ -62,10 +62,10 @@ greeting = (name) ->
 
 greetings = [
   "Happy Birthday {name}, you're not getting older, you're just a little closer to death.",
-  "Birthdays are good for you {name}. Statistics show that people who have the most live the longest!",
+  "Birthdays are good for you, {name}. Statistics show that people who have the most live the longest!",
   "{name} - I'm so glad you were born, because you brighten my life and fill it with joy.",
   "{name} - Always remember: growing old is mandatory, growing up is optional.",
-  "{name} - Better to be over the hill than burried under it.",
+  "{name} - Better to be over the hill than buried under it.",
   "You always have such fun birthdays {name}, you should have one every year.",
   "Happy birthday to {name}, a person who is smart, good looking, and funny and reminds me a lot of myself.",
   "{name} - We know we're getting old when the only thing we want for our birthday is not to be reminded of it.",
@@ -86,6 +86,6 @@ quotes = [
   "When I was younger, I could remember anything, whether it happened or not.- Mark Twain",
   "Whatever with the past has gone, The best is always yet to come. - Lucy Larcom",
   "It takes a long time to grow young. - Pablo Picasso",
-  "Few women admit their age. Few men act theirs. - Unkown",
+  "Few women admit their age. Few men act theirs. - Unknown",
   "The best way to remember your wife's birthday is to forget it once. - H. V. Prochnow"
 ]
