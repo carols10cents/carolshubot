@@ -35,18 +35,21 @@ class Reserver
   allReservations: ->
     @reservations
 
+  normalizeResource: (resource) ->
+    resource.toLowerCase().trim()
+
   findReservation: (resource) ->
-    @reservations[resource]
+    @reservations[@normalizeResource(resource)]
 
   reserve: (resource, user) ->
-    @reservations[resource] = user
+    @reservations[@normalizeResource(resource)] = user
     @save()
 
   cancel: (resource) ->
     @reserve(resource, "(available)")
 
   clear: (resource) ->
-    delete @reservations[resource]
+    delete @reservations[@normalizeResource(resource)]
     @save()
 
   clearAll: ->
@@ -62,7 +65,7 @@ module.exports = (robot) ->
       msg.send "#{resource}: #{user}"
 
   robot.respond /who has (the )?(.*)/i, (msg) ->
-    resource = msg.match[2].toLowerCase()
+    resource = msg.match[2]
     existingReservation = reserver.findReservation(resource)
     if !existingReservation || existingReservation == "(available)"
       msg.reply "No one does."
@@ -70,7 +73,7 @@ module.exports = (robot) ->
       msg.reply "#{existingReservation}"
 
   robot.respond /is (the )?(.*) available\?/i, (msg) ->
-    resource = msg.match[2].toLowerCase()
+    resource = msg.match[2]
     existingReservation = reserver.findReservation(resource)
     if !existingReservation || existingReservation == "(available)"
       msg.reply "Yes, it is."
@@ -90,7 +93,7 @@ module.exports = (robot) ->
       msg.reply "Sorry, that's currently reserved by #{existingReservation}. Please have them return it."
 
   robot.respond /(force )?return (the )?(.*)/i, (msg) ->
-    resource = msg.match[3].toLowerCase()
+    resource = msg.match[3]
     user     = msg.message.user.name
     existingReservation = reserver.findReservation(resource)
     force    = msg.match[1]
