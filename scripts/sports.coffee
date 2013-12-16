@@ -24,6 +24,9 @@ module.exports = (robot) ->
   robot.hear /duke/i, (msg) ->
     msg.reply "PITT BEAT DUKE"
 
+  robot.hear /\bplayoffs\b/i, (msg) ->
+    msg.send "http://stream1.gifsoup.com/view/92512/mora-playoff-rant-o.gif"
+
   robot.hear /(when is the next steelers game|when do the steelers play( next)?)\??/i, (msg) ->
     nflLookup robot, msg, ''
 
