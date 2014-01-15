@@ -29,6 +29,7 @@
     "hubot-hipchat": "https://github.com/carols10cents/hubot-hipchat/tarball/master",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git",
     "ntwitter": "https://github.com/sebhildebrandt/ntwitter/tarball/master",
+    "twit": "latest",
     "htmlparser": "1.7.6",
     "soupselect": "0.2.0",
     "jsdom": "0.2.14",
