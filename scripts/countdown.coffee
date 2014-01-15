@@ -50,6 +50,8 @@ module.exports = (robot) ->
 
   robot.hear /countdown list/i, (msg) ->
     countdowns = robot.brain.data.countdown;
+    if countdowns.length == 0
+      msg.send "Currently tracking no countdowns."
     for countdownKey of countdowns
       msg.send countdownKey + " -> " + new Date(countdowns[countdownKey].date).toDateString() +
         " -> " + getCountdownMsg(countdownKey) if countdowns.hasOwnProperty(countdownKey)
