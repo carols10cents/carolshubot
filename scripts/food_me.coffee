@@ -14,6 +14,9 @@
 #   carols10cents
 
 module.exports = (robot) ->
+  robot.hear /(pizza pizza)/i, (msg) ->
+    msg.send "Did you want pizza? https://www.grubhub.com/pittsburgh/ephesus-pizza-pittsburgh/?showSmallSearchWidget=Y"
+
   robot.hear /(yimmy('?s)? me)/i, (msg) ->
     msg.http('https://graph.facebook.com/oauth/access_token')
        .query(
