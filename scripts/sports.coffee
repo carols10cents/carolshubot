@@ -22,7 +22,7 @@ module.exports = (robot) ->
     msg.reply "Cleveland still sucks"
 
   robot.hear /duke/i, (msg) ->
-    msg.reply "PITT BEAT DUKE"
+    msg.reply "Duke beat Pitt (okay)"
 
   robot.hear /\bplayoffs\b/i, (msg) ->
     msg.send "http://stream1.gifsoup.com/view/92512/mora-playoff-rant-o.gif"
