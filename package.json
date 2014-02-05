@@ -27,6 +27,7 @@
     "hubot":         ">= 2.5.1",
     "hubot-scripts": ">= 2.5.1",
     "hubot-hipchat": "https://github.com/carols10cents/hubot-hipchat/tarball/master",
+    "hubot-hipchat-emoticons":  ">=1.3.0",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git",
     "ntwitter": "https://github.com/sebhildebrandt/ntwitter/tarball/master",
     "twit": "latest",
