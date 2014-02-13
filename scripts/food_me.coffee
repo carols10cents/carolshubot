@@ -17,6 +17,9 @@ module.exports = (robot) ->
   robot.hear /(pizza pizza)/i, (msg) ->
     msg.send "Did you want pizza? https://www.grubhub.com/pittsburgh/ephesus-pizza-pittsburgh/?showSmallSearchWidget=Y"
 
+  robot.hear /(bz bz)/i, (msg) ->
+    msg.send "Here is BZ's menu http://bzbarandgrill.com/menu/menu_printable.pdf - Their number is 412-323-2924"
+
   robot.hear /(yimmy('?s)? me)/i, (msg) ->
     msg.http('https://graph.facebook.com/oauth/access_token')
        .query(
