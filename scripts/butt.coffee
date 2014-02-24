@@ -182,65 +182,66 @@ stopwords = [
 
 # figure out how many uniques
 # if the script is triggered, it will always butt at least one word
-howManyButts (size, replaceFreqDenom) ->
-  Math.floor(size / replaceFreqDenom) + 1
+module.exports = (robot) ->
+  howManyButts = (size, replaceFreqDenom) ->
+    Math.floor(size / replaceFreqDenom) + 1
 
 # pick words to butt
-whichToButt (uniques, numToButt) ->
-  output = []
-  while output.size() < numToButt
-    nextButtIdx = Math.floor(Math.random * uniques.size())
-    output = (output.concat uniques[nextButtIdx]).unique
-  output
+  whichToButt = (uniques, numToButt) ->
+    output = []
+    while output.size() < numToButt
+      nextButtIdx = Math.floor(Math.random * uniques.size())
+      output = (output.concat uniques[nextButtIdx]).unique
+    output
 
 
 
 # main script runner
-buttify (str, replaceFreqDenom) ->
-  words = str.split(' ')
-  uniques = words.unique
-  
-  # how many butts?
-  numToButt = howManyButts(uniques.size(), replaceFreqDenom)
+  buttify = (str, replaceFreqDenom) ->
+    words = str.split(' ')
+    uniques = words.unique
+    
+    # how many butts?
+    numToButt = howManyButts(uniques.size(), replaceFreqDenom)
 
-  # which will we butt?
-  toButt = whichToButt(uniques, numToButt)
+    # which will we butt?
+    toButt = whichToButt(uniques, numToButt)
 
-  # perform buttification
+    # perform buttification
 
-  # reform string
-  words.join(' ')
+    # reform string
+    words.join(' ')
 
 # message must contain at least some word-like tokens that we can butt
-isStringButtable (str) ->
-  (str.search /[a-zA-Z]+/gi ) > 0
+  isStringButtable = (str) ->
+    (str.search /[a-zA-Z]+/gi ) > 0
 
 # determine whether we are to butt (check trigger and validate input)
-toButtOrNotToButt (str, triggerFreqDenom) ->
-  if (Math.floor(Math.random() * triggerFreqDenom) + 1) == 1
-    isStringButtable(str)
-  else
-    false
+  toButtOrNotToButt = (str, triggerFreqDenom) ->
+    if (Math.floor(Math.random() * triggerFreqDenom) + 1) == 1
+      isStringButtable(str)
+    else
+      false
 
 # -------------------------------------------------------------------------------------------------
 # the main Hubot method
 
-module.exports = (robot) ->
+  module.exports = (robot) ->
 
-  # get env vars read into memory
-  if triggerEnv
-    frequencyDenom = parseInt(trigger_env)
-  else
-    frequencyDenom = DEFAULT_TRIGGER_FREQ_DENOM
+    # get env vars read into memory
+    if triggerEnv
+      frequencyDenom = parseInt(trigger_env)
+    else
+      frequencyDenom = DEFAULT_TRIGGER_FREQ_DENOM
 
-  if replaceEnv
-    replaceDenom = parseInt(replaceEnv)
-  else
-    replaceDenom = DEFAULT_REPLACE_FREQ_DENOM
+    if replaceEnv
+      replaceDenom = parseInt(replaceEnv)
+    else
+      replaceDenom = DEFAULT_REPLACE_FREQ_DENOM
 
-  # match on all incoming strings
-  robot.hear /(.+)/i, (msg) ->
-    original = escape(msg.match[1]).trim.toLowerCase()
-    if toButtOrNotToButt(original, frequencyDenom)
-      butted = buttify(original, replaceDenom)
-      msg.send butted 
+    # match on all incoming strings
+    robot.hear /(.+)/i, (msg) ->
+      original = escape(msg.match[1]).trim.toLowerCase()
+      if toButtOrNotToButt(original, frequencyDenom)
+        butted = buttify(original, replaceDenom)
+        msg.send butted 
