@@ -37,7 +37,7 @@ module.exports = (robot) ->
     re = new RegExp(word_to_butt,"g")
     return str.replace(re,"butt")
 
-  non_butted_messages = 100
+  non_butted_messages = 200
   chat_buttify = _.after non_butted_messages, buttify
 
   # Random butts
