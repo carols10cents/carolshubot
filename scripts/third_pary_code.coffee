@@ -9,7 +9,7 @@
 #   None
 #
 # Commands:
-#   ( seen | looked at ) their code - Sometimes thrid party code isn't as good
+#   (seen | looked at | looking at) their code - Sometimes thrid party code isn't as good
 #   as we'd like
 #
 # Author:
@@ -23,5 +23,5 @@ reaction_images = [
 ]
 
 module.exports = (robot) ->
-  robot.hear /((seen)|(looked at)).*their code/i, (msg) ->
+  robot.hear /((seen)|(looked at)|(looking at)).*their code/i, (msg) ->
     msg.send msg.random reaction_images
