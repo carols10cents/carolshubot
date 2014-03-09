@@ -1,5 +1,5 @@
 # Description:
-#   Sometimes thrid party code isn't as good as we'd like. No offense, we all
+#   Sometimes third party code isn't as good as we'd like. No offense, we all
 #   have different priorites, and at least it's free.
 #
 # Dependencies:
@@ -9,8 +9,7 @@
 #   None
 #
 # Commands:
-#   (seen | looked at | looking at) their code - Sometimes thrid party code isn't as good
-#   as we'd like
+#   (seen | looked at | looking at) their code - Sometimes third party code isn't as good as we'd like
 #
 # Author:
 #   Rob
