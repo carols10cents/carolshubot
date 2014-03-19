@@ -42,10 +42,10 @@ module.exports = (robot) ->
 
   # Random butts
   robot.hear /(.+)/i, (msg) ->
-    result = chat_buttify(msg.match[1])
-    if result != undefined
-      msg.send result
-      chat_buttify = _.after non_butted_messages, buttify
+    #result = chat_buttify(msg.match[1])
+    #if result != undefined
+    #  msg.send result
+    #  chat_buttify = _.after non_butted_messages, buttify
 
   # On demand butts
   robot.respond /butt me (.*)/i, (msg) ->
