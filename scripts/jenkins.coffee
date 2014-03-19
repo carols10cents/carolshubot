@@ -21,40 +21,37 @@
 #   jkoenig311
 
 
+server = process.env.JENKINS_SERVER
+job = process.env.JENKINS_JOB
+token = process.env.JENKINS_TOKEN
+
 module.exports = (robot) ->
   robot.respond /(build|test) ?(.*)?$/i, (msg) ->
-    server = process.env.JENKINS_SERVER
-    job = process.env.JENKINS_JOB
-    token = process.env.JENKINS_TOKEN
-    if server && job && token
-      msg.http("http://#{server}/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[2]}")
-      .get() (err, res, body) ->
-
-      msg.send("jenkins is building '#{msg.match[2]}'")
-    else
-      msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
+    endpoint = "/buildByToken/buildWithParameters?job=#{job}&token=#{token}&BRANCH_NAME=#{msg.match[2]}&MENTION_NAME=#{msg.message.user.mention_name}"
+    post robot, msg, endpoint
+    msg.send("jenkins is building '#{msg.match[2]}'")
 
   robot.hear /^jenkins failures( \w+||())/i, (msg) ->
-      get_faild_tests(msg)
+    get_faild_tests(msg)
 
   robot.hear /^jenkins status( \w+||())/i, (msg) ->
-      get_status(msg)
+    get_status(msg)
 
   robot.hear /^(Apangea.*.[0-9])+ - #(\d+).+[FAILURE,Unstable]/i, (msg) ->
-      get_build_status(msg)
+    get_build_status(msg)
 
 get_build_status = (msg)->
-    jenkins = jenkins_init()
-    jenkins.build_info msg.match[1], msg.match[2], (err, info) ->
-      causes = info.actions[1].causes[0]
-      jenkins.build_info causes.upstreamProject, causes.upstreamBuild, (err, parent_info) ->
-      message = "#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures.
-      \nParent job of failure: http://#{process.env.JENKINS_SERVER}/#{causes.upstreamUrl}#{causes.upstreamBuild}"
-      if parent_info.actions[0].parameters != undefined
-              message += "\nBranch name: #{parent_info.actions[0].parameters[0].value}"
-      if parent_info.culprits != undefined && parent_info.culprits[0] != undefined
-              message += "\nPossible Culprits: #{parent_info.culprits[0].fullName}"
-      msg.send message
+  jenkins = jenkins_init()
+  jenkins.build_info msg.match[1], msg.match[2], (err, info) ->
+    causes = info.actions[1].causes[0]
+    jenkins.build_info causes.upstreamProject, causes.upstreamBuild, (err, parent_info) ->
+    message = "#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures.
+    \nParent job of failure: http://#{process.env.JENKINS_SERVER}/#{causes.upstreamUrl}#{causes.upstreamBuild}"
+    if parent_info.actions[0].parameters != undefined
+            message += "\nBranch name: #{parent_info.actions[0].parameters[0].value}"
+    if parent_info.culprits != undefined && parent_info.culprits[0] != undefined
+            message += "\nPossible Culprits: #{parent_info.culprits[0].fullName}"
+    msg.send message
 
 get_faild_tests = (msg)->
   jenkins = jenkins_init()
@@ -84,10 +81,18 @@ get_status = (msg)->
             message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
           msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
-jenkins_init =  (msg)->
-    jenkinsapi = require('jenkins-api')
-    api = process.env.JENKINS_API
-    user = process.env.JENKINS_USER
-    server = process.env.JENKINS_SERVER
-    return jenkinsapi.init("http://#{user}:#{api}@#{server}")
+post = ( robot, msg, endpoint )->
+  if server && job && token
+    robot.http("http://#{server}#{endpoint}")
+    .get() (err, res, body) ->
+
+  else
+    msg.send("jenkins environment variables not set. JENKINS_SERVER, JENKINS_TOKEN, and JENKINS_JOB")
+
+jenkins_init =  ()->
+  jenkinsapi = require('jenkins-api')
+  api = process.env.JENKINS_API
+  user = process.env.JENKINS_USER
+  server = process.env.JENKINS_SERVER
+  return jenkinsapi.init("http://#{user}:#{api}@#{server}")
 
