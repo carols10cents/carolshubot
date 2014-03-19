@@ -46,43 +46,43 @@ module.exports = (robot) ->
 get_build_status = (msg)->
     jenkins = jenkins_init()
     jenkins.build_info msg.match[1], msg.match[2], (err, info) ->
-            causes = info.actions[1].causes[0]
-            jenkins.build_info causes.upstreamProject, causes.upstreamBuild, (err, parent_info) ->
-              message = "#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures.
-              \nParent job of failure: http://#{process.env.JENKINS_SERVER}/#{causes.upstreamUrl}#{causes.upstreamBuild}"
-              if parent_info.actions[0].parameters != undefined
-                      message += "\nBranch name: #{parent_info.actions[0].parameters[0].value}"
-              if parent_info.culprits != undefined && parent_info.culprits[0] != undefined
-                      message += "\nPossible Culprits: #{parent_info.culprits[0].fullName}"
-              msg.send message
+      causes = info.actions[1].causes[0]
+      jenkins.build_info causes.upstreamProject, causes.upstreamBuild, (err, parent_info) ->
+      message = "#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures.
+      \nParent job of failure: http://#{process.env.JENKINS_SERVER}/#{causes.upstreamUrl}#{causes.upstreamBuild}"
+      if parent_info.actions[0].parameters != undefined
+              message += "\nBranch name: #{parent_info.actions[0].parameters[0].value}"
+      if parent_info.culprits != undefined && parent_info.culprits[0] != undefined
+              message += "\nPossible Culprits: #{parent_info.culprits[0].fullName}"
+      msg.send message
 
 get_faild_tests = (msg)->
-    jenkins = jenkins_init()
-    filter = msg.match[1].replace(" ","")
-    filter_regex = new RegExp(filter, "i")
-    jenkins.all_jobs (err, data) ->
-            for job in data
-                    jenkins.last_completed_build_info job.name, (err, info) ->
-                           if info.result? && info.result != "SUCCESS"
-                                   if info.actions == undefined || info.actions[6] == undefined
-                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
-                                   else
-                                      message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
-                                   msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
+  jenkins = jenkins_init()
+  filter = msg.match[1].replace(" ","")
+  filter_regex = new RegExp(filter, "i")
+  jenkins.all_jobs (err, data) ->
+    for job in data
+      jenkins.last_completed_build_info job.name, (err, info) ->
+        if info.result? && info.result != "SUCCESS"
+          if info.actions == undefined || info.actions[6] == undefined
+            message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
+          else
+            message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+          msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 get_status = (msg)->
-    jenkins = jenkins_init()
-    filter = msg.match[1].replace(" ","")
-    filter_regex = new RegExp(filter, "i")
-    jenkins.all_jobs (err, data) ->
-            for job in data
-                    jenkins.last_completed_build_info job.name, (err, info) ->
-                                   if info.fullDisplayName != undefined
-                                       if info.actions == undefined || info.actions[6] == undefined || info.result == "SUCCESS"
-                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
-                                       else
-                                           message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
-                                       msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
+  jenkins = jenkins_init()
+  filter = msg.match[1].replace(" ","")
+  filter_regex = new RegExp(filter, "i")
+  jenkins.all_jobs (err, data) ->
+    for job in data
+      jenkins.last_completed_build_info job.name, (err, info) ->
+        if info.fullDisplayName != undefined
+          if info.actions == undefined || info.actions[6] == undefined || info.result == "SUCCESS"
+            message ="#{info.fullDisplayName}, #{info.result}, #{info.url}"
+          else
+            message ="#{info.fullDisplayName}, #{info.result}, #{info.actions[6].failCount} test failures, #{info.url}"
+          msg.send(message) unless !filter.undefined? and !info.fullDisplayName.match(filter_regex)? # if a filter was provided, only show matches
 
 jenkins_init =  (msg)->
     jenkinsapi = require('jenkins-api')
