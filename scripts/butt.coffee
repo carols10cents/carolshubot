@@ -37,15 +37,15 @@ module.exports = (robot) ->
     re = new RegExp(word_to_butt,"g")
     return str.replace(re,"butt")
 
-  non_butted_messages = 150
+  non_butted_messages = 100
   chat_buttify = _.after non_butted_messages, buttify
 
   # Random butts
   robot.hear /(.+)/i, (msg) ->
-    #result = chat_buttify(msg.match[1])
-    #if result != undefined
-    #  msg.send result
-    #  chat_buttify = _.after non_butted_messages, buttify
+    result = chat_buttify(msg.match[1])
+    if result != undefined
+      msg.send result
+      chat_buttify = _.after non_butted_messages, buttify
 
   # On demand butts
   robot.respond /butt me (.*)/i, (msg) ->

@@ -26,4 +26,4 @@ poopie_images = [
 module.exports = (robot) ->
 
   robot.hear /\\[ ]*[o|O|0][ ]*\/|quinoa|asset pipeline/i, (msg) ->
-    # msg.send msg.random poopie_images
+    msg.send msg.random poopie_images
