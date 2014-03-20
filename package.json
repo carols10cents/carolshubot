@@ -24,9 +24,9 @@
   },
 
   "dependencies": {
-    "hubot":         ">= 2.5.1",
-    "hubot-scripts": ">= 2.5.1",
-    "hubot-hipchat": "https://github.com/carols10cents/hubot-hipchat/tarball/master",
+    "hubot":         ">= 2.6.4",
+    "hubot-scripts": ">= 2.5.11",
+    "hubot-hipchat": ">= 2.6.4",
     "hubot-hipchat-emoticons":  ">=1.3.0",
     "jenkinsapi": "git://github.com/jkoenig311/node-jenkins-api.git",
     "ntwitter": "https://github.com/sebhildebrandt/ntwitter/tarball/master",
